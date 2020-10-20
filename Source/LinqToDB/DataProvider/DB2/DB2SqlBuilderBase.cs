@@ -30,7 +30,7 @@ namespace LinqToDB.DataProvider.DB2
 		public override int CommandCount(SqlStatement statement)
 		{
 			if (statement is SqlTruncateTableStatement trun)
-				return trun.ResetIdentity ? 1 + trun.Table!.Fields.Values.Count(f => f.IsIdentity) : 1;
+				return trun.ResetIdentity ? 1 + trun.Table!.IdentityFields.Count : 1;
 
 			if (Version == DB2Version.LUW && statement is SqlInsertStatement insertStatement && insertStatement.Insert.WithIdentity)
 			{
@@ -47,7 +47,7 @@ namespace LinqToDB.DataProvider.DB2
 		{
 			if (statement is SqlTruncateTableStatement trun)
 			{
-				var field = trun.Table!.Fields.Values.Skip(commandNumber - 1).First(f => f.IsIdentity);
+				var field = trun.Table!.IdentityFields[commandNumber - 1];
 
 				StringBuilder.Append("ALTER TABLE ");
 				ConvertTableName(StringBuilder, trun.Table.Server, trun.Table.Database, trun.Table.Schema, trun.Table.PhysicalName!);
@@ -89,7 +89,7 @@ namespace LinqToDB.DataProvider.DB2
 				sb.AppendLine();
 				AppendIndent().AppendLine("FROM");
 				AppendIndent().AppendLine("\tNEW TABLE");
-				AppendIndent().AppendLine("\t(");
+				AppendIndent().Append("\t").AppendLine(OpenParens);
 			}
 
 			base.BuildSql(commandNumber, statement, sb, indent, skipAlias);
@@ -223,7 +223,7 @@ namespace LinqToDB.DataProvider.DB2
 		{
 			StringBuilder.Append("VALUES ");
 
-			foreach (var col in insertClause.Into!.Fields)
+			foreach (var _ in insertClause.Into!.Fields)
 				StringBuilder.Append("(DEFAULT)");
 
 			StringBuilder.AppendLine();
@@ -248,10 +248,10 @@ namespace LinqToDB.DataProvider.DB2
 
 		protected override string? GetProviderTypeName(IDbDataParameter parameter)
 		{
-			if (parameter.DbType == DbType.Decimal && parameter.Value is decimal)
+			if (parameter.DbType == DbType.Decimal && parameter.Value is decimal decValue)
 			{
-				var d = new SqlDecimal((decimal)parameter.Value);
-				return "(" + d.Precision + "," + d.Scale + ")";
+				var d = new SqlDecimal(decValue);
+				return "(" + d.Precision + InlineComma + d.Scale + ")";
 			}
 
 			if (Provider != null)

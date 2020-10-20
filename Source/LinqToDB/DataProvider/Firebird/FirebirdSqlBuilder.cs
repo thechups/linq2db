@@ -106,14 +106,14 @@ namespace LinqToDB.DataProvider.Firebird
 			{
 				case DataType.Decimal       :
 					base.BuildDataTypeFromDataType(type.Type.Precision > 18 ? new SqlDataType(type.Type.DataType, type.Type.SystemType, null, 18, type.Type.Scale, type.Type.DbType) : type, forCreateTable);
-					break;
+					                                                                                      break;
 				case DataType.SByte         :
-				case DataType.Byte          : StringBuilder.Append("SmallInt");        break;
-				case DataType.Money         : StringBuilder.Append("Decimal(18,4)");   break;
-				case DataType.SmallMoney    : StringBuilder.Append("Decimal(10,4)");   break;
+				case DataType.Byte          : StringBuilder.Append("SmallInt");                           break;
+				case DataType.Money         : StringBuilder.AppendFormat("Decimal(18{0}4)", InlineComma); break;
+				case DataType.SmallMoney    : StringBuilder.AppendFormat("Decimal(10{0}4)", InlineComma); break;
 				case DataType.DateTime2     :
 				case DataType.SmallDateTime :
-				case DataType.DateTime      : StringBuilder.Append("TimeStamp");       break;
+				case DataType.DateTime      : StringBuilder.Append("TimeStamp");                          break;
 				case DataType.NVarChar      :
 					StringBuilder.Append("VarChar");
 
@@ -126,12 +126,12 @@ namespace LinqToDB.DataProvider.Firebird
 						StringBuilder.Append($"({type.Type.Length})");
 
 					StringBuilder.Append(" CHARACTER SET UNICODE_FSS");
-					break;
-				case DataType.VarBinary     : StringBuilder.Append("BLOB");            break;
+					                                                                                      break;
+				case DataType.VarBinary     : StringBuilder.Append("BLOB");                               break;
 				// BOOLEAN type available since FB 3.0, but FirebirdDataProvider.SetParameter converts boolean to '1'/'0'
 				// so for now we will use type, compatible with SetParameter by default
-				case DataType.Boolean       : StringBuilder.Append("CHAR");            break;
-				default: base.BuildDataTypeFromDataType(type, forCreateTable);         break;
+				case DataType.Boolean       : StringBuilder.Append("CHAR");                               break;
+				default: base.BuildDataTypeFromDataType(type, forCreateTable);                            break;
 			}
 		}
 
@@ -226,10 +226,10 @@ namespace LinqToDB.DataProvider.Firebird
 			switch (statement)
 			{
 				case SqlTruncateTableStatement truncate:
-					return truncate.ResetIdentity && truncate.Table!.Fields.Values.Any(f => f.IsIdentity) ? 2 : 1;
+					return truncate.ResetIdentity && truncate.Table!.IdentityFields.Count > 0 ? 2 : 1;
 
 				case SqlCreateTableStatement createTable:
-					_identityField = createTable.Table!.Fields.Values.FirstOrDefault(f => f.IsIdentity);
+					_identityField = createTable.Table!.IdentityFields.FirstOrDefault();
 					if (_identityField != null)
 						return 3;
 					break;
@@ -240,7 +240,7 @@ namespace LinqToDB.DataProvider.Firebird
 
 		protected override void BuildDropTableStatement(SqlDropTableStatement dropTable)
 		{
-			var identityField = dropTable.Table!.Fields.Values.FirstOrDefault(f => f.IsIdentity);
+			var identityField = dropTable.Table!.IdentityFields.FirstOrDefault();
 
 			if (identityField == null && dropTable.IfExists == false)
 			{

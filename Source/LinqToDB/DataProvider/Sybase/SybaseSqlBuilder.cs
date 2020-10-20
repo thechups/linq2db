@@ -232,7 +232,7 @@ namespace LinqToDB.DataProvider.Sybase
 		{
 			AppendIndent();
 			StringBuilder.Append("CONSTRAINT ").Append(pkName).Append(" PRIMARY KEY CLUSTERED (");
-			StringBuilder.Append(fieldNames.Aggregate((f1,f2) => f1 + ", " + f2));
+			StringBuilder.Append(string.Join(InlineComma, fieldNames));
 			StringBuilder.Append(")");
 		}
 
@@ -256,7 +256,7 @@ namespace LinqToDB.DataProvider.Sybase
 		public override int CommandCount(SqlStatement statement)
 		{
 			if (statement is SqlTruncateTableStatement trun)
-				return trun.ResetIdentity && trun.Table!.Fields.Values.Any(f => f.IsIdentity) ? 2 : 1;
+				return trun.ResetIdentity && trun.Table!.IdentityFields.Count > 0 ? 2 : 1;
 
 			return 1;
 		}

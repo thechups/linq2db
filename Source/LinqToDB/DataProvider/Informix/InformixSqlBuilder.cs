@@ -36,7 +36,7 @@ namespace LinqToDB.DataProvider.Informix
 		public override int CommandCount(SqlStatement statement)
 		{
 			if (statement is SqlTruncateTableStatement trun)
-				return trun.ResetIdentity ? 1 + trun.Table!.Fields.Values.Count(f => f.IsIdentity) : 1;
+				return trun.ResetIdentity ? 1 + trun.Table!.IdentityFields.Count : 1;
 			return statement.NeedsIdentity() ? 2 : 1;
 		}
 
@@ -44,7 +44,7 @@ namespace LinqToDB.DataProvider.Informix
 		{
 			if (statement is SqlTruncateTableStatement trun)
 			{
-				var field = trun.Table!.Fields.Values.Skip(commandNumber - 1).First(f => f.IsIdentity);
+				var field = trun.Table!.IdentityFields[commandNumber - 1];
 
 				StringBuilder.Append("ALTER TABLE ");
 				ConvertTableName(StringBuilder, trun.Table.Server, trun.Table.Database, trun.Table.Schema, trun.Table.PhysicalName!);
@@ -140,7 +140,7 @@ namespace LinqToDB.DataProvider.Informix
 				case DataType.Date       : StringBuilder.Append("DATETIME YEAR TO DAY");      return;
 				case DataType.SByte      :
 				case DataType.Byte       : StringBuilder.Append("SmallInt");                  return;
-				case DataType.SmallMoney : StringBuilder.Append("Decimal(10,4)");             return;
+				case DataType.SmallMoney : StringBuilder.Append("Decimal(10, 4)");            return;
 				case DataType.Decimal    :
 					StringBuilder.Append("Decimal");
 					if (type.Type.Precision != null && type.Type.Scale != null)
@@ -234,7 +234,7 @@ namespace LinqToDB.DataProvider.Informix
 		{
 			AppendIndent();
 			StringBuilder.Append("PRIMARY KEY (");
-			StringBuilder.Append(fieldNames.Aggregate((f1,f2) => f1 + ", " + f2));
+			StringBuilder.Append(string.Join(InlineComma, fieldNames));
 			StringBuilder.Append(")");
 		}
 

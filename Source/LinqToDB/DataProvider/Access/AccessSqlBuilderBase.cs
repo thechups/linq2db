@@ -23,7 +23,7 @@ namespace LinqToDB.DataProvider.Access
 		public override int CommandCount(SqlStatement statement)
 		{
 			if (statement is SqlTruncateTableStatement trun)
-				return trun.ResetIdentity ? 1 + trun.Table!.Fields.Values.Count(f => f.IsIdentity) : 1;
+				return trun.ResetIdentity ? 1 + trun.Table!.IdentityFields.Count : 1;
 			return statement.NeedsIdentity() ? 2 : 1;
 		}
 
@@ -31,13 +31,13 @@ namespace LinqToDB.DataProvider.Access
 		{
 			if (statement is SqlTruncateTableStatement trun)
 			{
-				var field = trun.Table!.Fields.Values.Skip(commandNumber - 1).First(f => f.IsIdentity);
+				var field = trun.Table!.IdentityFields[commandNumber - 1];
 
 				StringBuilder.Append("ALTER TABLE ");
 				ConvertTableName(StringBuilder, trun.Table.Server, trun.Table.Database, trun.Table.Schema, trun.Table.PhysicalName!);
 				StringBuilder.Append(" ALTER COLUMN ");
 				Convert(StringBuilder, field.PhysicalName, ConvertType.NameToQueryField);
-				StringBuilder.AppendLine(" COUNTER(1,1)");
+				StringBuilder.AppendLine(" COUNTER(1, 1)");
 			}
 			else
 			{
@@ -385,7 +385,7 @@ namespace LinqToDB.DataProvider.Access
 		{
 			AppendIndent();
 			StringBuilder.Append("CONSTRAINT ").Append(pkName).Append(" PRIMARY KEY CLUSTERED (");
-			StringBuilder.Append(fieldNames.Aggregate((f1,f2) => f1 + ", " + f2));
+			StringBuilder.Append(string.Join(InlineComma, fieldNames));
 			StringBuilder.Append(")");
 		}
 

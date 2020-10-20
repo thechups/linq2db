@@ -1,12 +1,11 @@
 ﻿using System.Data;
-using System.Linq;
 using System.Text;
 
 namespace LinqToDB.DataProvider.SqlCe
 {
-	using SqlQuery;
-	using SqlProvider;
 	using LinqToDB.Mapping;
+	using SqlProvider;
+	using SqlQuery;
 
 	class SqlCeSqlBuilder : BasicSqlBuilder
 	{
@@ -50,7 +49,7 @@ namespace LinqToDB.DataProvider.SqlCe
 		public override int CommandCount(SqlStatement statement)
 		{
 			if (statement is SqlTruncateTableStatement trun)
-				return trun.ResetIdentity ? 1 + trun.Table!.Fields.Values.Count(f => f.IsIdentity) : 1;
+				return trun.ResetIdentity ? 1 + trun.Table!.IdentityFields.Count : 1;
 			return statement.NeedsIdentity() ? 2 : 1;
 		}
 
@@ -58,13 +57,13 @@ namespace LinqToDB.DataProvider.SqlCe
 		{
 			if (statement is SqlTruncateTableStatement trun)
 			{
-				var field = trun.Table!.Fields.Values.Skip(commandNumber - 1).First(f => f.IsIdentity);
+				var field = trun.Table!.IdentityFields[commandNumber - 1];
 
 				StringBuilder.Append("ALTER TABLE ");
 				ConvertTableName(StringBuilder, trun.Table.Server, trun.Table.Database, trun.Table.Schema, trun.Table.PhysicalName!);
 				StringBuilder.Append(" ALTER COLUMN ");
 				Convert(StringBuilder, field.PhysicalName, ConvertType.NameToQueryField);
-				StringBuilder.AppendLine(" IDENTITY(1,1)");
+				StringBuilder.AppendLine(" IDENTITY(1, 1)");
 			}
 			else
 		{
@@ -89,11 +88,11 @@ namespace LinqToDB.DataProvider.SqlCe
 			{
 				case DataType.Char          : base.BuildDataTypeFromDataType(new SqlDataType(DataType.NChar,    type.Type.Length), forCreateTable); return;
 				case DataType.VarChar       : base.BuildDataTypeFromDataType(new SqlDataType(DataType.NVarChar, type.Type.Length), forCreateTable); return;
-				case DataType.SmallMoney    : StringBuilder.Append("Decimal(10,4)");                                                           return;
+				case DataType.SmallMoney    : StringBuilder.Append("Decimal(10, 4)");                                                               return;
 				case DataType.DateTime2     :
 				case DataType.Time          :
 				case DataType.Date          :
-				case DataType.SmallDateTime : StringBuilder.Append("DateTime");                                                                return;
+				case DataType.SmallDateTime : StringBuilder.Append("DateTime");                                                                     return;
 				case DataType.NVarChar:
 					if (type.Type.Length == null || type.Type.Length > 4000 || type.Type.Length < 1)
 					{
