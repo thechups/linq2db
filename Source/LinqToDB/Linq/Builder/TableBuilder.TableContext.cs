@@ -1481,7 +1481,7 @@ namespace LinqToDB.Linq.Builder
 							var descriptor = GetAssociationDescriptor(levelExpression, out var accessorMember);
 							if (descriptor != null && accessorMember != null)
 							{
-								var isOuter = descriptor.CanBeNull || ForceLeftJoinAssociations;
+								var isOuter = descriptor.GetCanBeNull() || ForceLeftJoinAssociations;
 								IBuildContext? associatedContext;
 
 								if (!descriptor.IsList && !AssociationsToSubQueries)
@@ -1612,7 +1612,7 @@ namespace LinqToDB.Linq.Builder
 							attribute.QueryExpressionMethod,
 							attribute.QueryExpression,
 							attribute.Storage,
-							attribute.CanBeNull,
+							attribute.CanBeNullNullable,
 							attribute.AliasName
 						);
 				}

@@ -57,9 +57,9 @@ namespace LinqToDB.Linq.Builder
 				}
 				else
 				{
-					var definedCount = definedQueryMethod.Parameters.Count;
+					var definedCount   = definedQueryMethod.Parameters.Count;
 					var argumentsCount = onMember.Arguments.Count;
-					var diff = definedCount - argumentsCount;
+					var diff           = definedCount - argumentsCount;
 					for (int i = definedCount - 1; i >= diff; i--)
 					{
 						parameterMatch.Add(definedQueryMethod.Parameters[i], onMember.Arguments[i - diff]);
@@ -118,7 +118,6 @@ namespace LinqToDB.Linq.Builder
 
 				if (expressionPredicate != null)
 				{
-					shouldAddDefaultIfEmpty = true;
 					shouldAddCacheCheck = true;
 
 					var replacedBody = expressionPredicate.GetBody(parentParam, childParam);
@@ -134,7 +133,6 @@ namespace LinqToDB.Linq.Builder
 					var ed = builder.MappingSchema.GetEntityDescriptor(objectType);
 					if (ed.QueryFilterFunc != null)
 					{
-						shouldAddDefaultIfEmpty = true;
 						shouldAddCacheCheck = true;
 					}
 				}
@@ -149,7 +147,6 @@ namespace LinqToDB.Linq.Builder
 			}
 			else
 			{
-				shouldAddDefaultIfEmpty = true;
 				var bodyExpression = definedQueryMethod.Body.Unwrap();
 				if (bodyExpression.NodeType == ExpressionType.Call)
 				{
