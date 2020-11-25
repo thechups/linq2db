@@ -223,7 +223,7 @@ namespace LinqToDB.Expressions
 
 				case ExpressionType.Block:
 					return EqualsToX((BlockExpression)expr1, (BlockExpression)expr2, info);
-				
+
 				case ChangeTypeExpression.ChangeTypeType:
 					return
 						((ChangeTypeExpression) expr1).Type == ((ChangeTypeExpression) expr2).Type &&
@@ -933,7 +933,7 @@ namespace LinqToDB.Expressions
 
 		public static Expression SkipPathThrough(this Expression expr)
 		{
-			while (expr is MethodCallExpression mce && mce.IsQueryable("AsQueryable"))
+			while (expr is MethodCallExpression mce && mce.IsSameGenericMethod(Methods.Enumerable.AsQueryable, Methods.LinqToDB.SqlExt.ToNotNull))
 				expr = mce.Arguments[0];
 			return expr;
 		}
@@ -995,6 +995,7 @@ namespace LinqToDB.Expressions
 				return null;
 
 			expr = expr.SkipMethodChain(mapping);
+			expr = expr.SkipPathThrough();
 
 			switch (expr.NodeType)
 			{
@@ -1072,7 +1073,12 @@ namespace LinqToDB.Expressions
 		{
 			var type = method.Method.DeclaringType;
 
-			return type == typeof(Queryable) || (enumerable && type == typeof(Enumerable)) || type == typeof(LinqExtensions) || type == typeof(LinqToDB.DataExtensions);
+			return
+				type == typeof(Queryable) ||
+				enumerable && type == typeof(Enumerable) ||
+				type == typeof(LinqExtensions) ||
+				type == typeof(DataExtensions) ||
+				type == typeof(TableExtensions);
 		}
 
 		public static bool IsAsyncExtension(this MethodCallExpression method, bool enumerable = true)
@@ -1227,11 +1233,14 @@ namespace LinqToDB.Expressions
 			var expr = call.Object;
 
 			if (expr == null && call.Arguments.Count > 0 &&
-			    (call.IsQueryable() 
-			     || call.IsAggregate(mapping) 
-			     || call.IsExtensionMethod(mapping) 
-			     || call.IsAssociation(mapping) 
-			     || call.Method.IsSqlPropertyMethodEx()))
+			    (call.IsQueryable()
+			     || call.IsAggregate(mapping)
+			     || call.IsExtensionMethod(mapping)
+			     || call.IsAssociation(mapping)
+				 || call.Method.IsSqlPropertyMethodEx()
+				 || call.IsSameGenericMethod(Methods.LinqToDB.SqlExt.ToNotNull)
+			     )
+			    )
 			{
 				expr = call.Arguments[0];
 			}
@@ -1327,7 +1336,7 @@ namespace LinqToDB.Expressions
 		}
 
 		/// <summary>
-		/// Optimizes expression context by evaluating constants and simplifying boolean operations. 
+		/// Optimizes expression context by evaluating constants and simplifying boolean operations.
 		/// </summary>
 		/// <param name="expression">Expression to optimize.</param>
 		/// <returns>Optimized expression.</returns>
@@ -1365,7 +1374,7 @@ namespace LinqToDB.Expressions
 						newExpr = newExpr.NodeType == ExpressionType.Constant
 							? newExpr
 							: Expression.Constant(EvaluateExpression(newExpr));
-					}					
+					}
 					else
 					{
 						switch (newExpr)
@@ -1461,6 +1470,6 @@ namespace LinqToDB.Expressions
 
 			return expression;
 		}
-	
+
 	}
 }

@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LinqToDB.DataProvider.DB2
 {
-	using Data;
 	using Common;
+	using Data;
 	using LinqToDB.Common;
 	using Mapping;
 	using SchemaProvider;
 	using SqlProvider;
-	using System.Threading.Tasks;
-	using System.Threading;
 
 	public class DB2DataProvider : DynamicDataProviderBase<DB2ProviderAdapter>
 	{
 		public DB2DataProvider(string name, DB2Version version)
-						: base(
-				  name,
-				  GetMappingSchema(version, DB2ProviderAdapter.GetInstance().MappingSchema),
-				  DB2ProviderAdapter.GetInstance())
+			: base(
+				name,
+				GetMappingSchema(version, DB2ProviderAdapter.GetInstance().MappingSchema),
+				DB2ProviderAdapter.GetInstance())
 
 		{
 			Version = version;
@@ -74,6 +74,14 @@ namespace LinqToDB.DataProvider.DB2
 				new DB2zOSSchemaProvider(this):
 				new DB2LUWSchemaProvider(this);
 		}
+
+		public override TableOptions SupportedTableOptions =>
+			TableOptions.IsTemporary                |
+			TableOptions.IsLocalTemporaryStructure  |
+			TableOptions.IsGlobalTemporaryStructure |
+			TableOptions.IsLocalTemporaryData       |
+			TableOptions.CreateIfNotExists          |
+			TableOptions.DropIfExists;
 
 		public override ISqlBuilder CreateSqlBuilder(MappingSchema mappingSchema)
 		{
@@ -131,8 +139,8 @@ namespace LinqToDB.DataProvider.DB2
 						{
 							value    = b ? 1 : 0;
 							dataType = dataType.WithDataType(DataType.Int16);
-					}
-					break;
+						}
+						break;
 					}
 				case DataType.Guid       :
 					{
@@ -149,11 +157,10 @@ namespace LinqToDB.DataProvider.DB2
 				case DataType.VarBinary  :
 					{
 						if (value is Guid g) value = g.ToByteArray();
-
 						else if (parameter.Size == 0 && value != null
 							&& value.GetType() == Adapter.DB2BinaryType
 							&& Adapter.IsDB2BinaryNull(value))
-								value = DBNull.Value;
+							value = DBNull.Value;
 						break;
 					}
 			}

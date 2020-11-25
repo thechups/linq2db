@@ -17,7 +17,7 @@ namespace LinqToDB.ServiceModel
 	using SqlProvider;
 
 	[PublicAPI]
-	public abstract partial class RemoteDataContextBase : IDataContext, IEntityServices
+	public abstract partial class RemoteDataContextBase : IDataContext
 	{
 		public string? Configuration { get; set; }
 
@@ -49,8 +49,8 @@ namespace LinqToDB.ServiceModel
 				{
 					var info = client.GetInfo(Configuration);
 
-					var type = Type.GetType(info.MappingSchemaType);
-					var ms   = new RemoteMappingSchema(ContextIDPrefix, (MappingSchema)Activator.CreateInstance(type)!);
+					var type = Type.GetType(info.MappingSchemaType)!;
+					var ms   = new RemoteMappingSchema(ContextIDPrefix, (MappingSchema)Activator.CreateInstance(type));
 
 					_configurationInfo = new ConfigurationInfo
 					{
@@ -72,8 +72,7 @@ namespace LinqToDB.ServiceModel
 		protected abstract string       ContextIDPrefix { get; }
 
 		string?            _contextID;
-		string IDataContext.ContextID =>
-			_contextID ??= GetConfigurationInfo().MappingSchema.ConfigurationList[0];
+		string IDataContext.ContextID => _contextID ??= GetConfigurationInfo().MappingSchema.ConfigurationList[0];
 
 		private MappingSchema? _mappingSchema;
 		public  MappingSchema   MappingSchema
@@ -87,10 +86,7 @@ namespace LinqToDB.ServiceModel
 		}
 
 		private  MappingSchema? _serializationMappingSchema;
-		internal MappingSchema   SerializationMappingSchema
-		{
-			get => _serializationMappingSchema ??= new SerializationMappingSchema(MappingSchema);
-		}
+		internal MappingSchema  SerializationMappingSchema => _serializationMappingSchema ??= new SerializationMappingSchema(MappingSchema);
 
 		public  bool InlineParameters { get; set; }
 		public  bool CloseAfterUse    { get; set; }
@@ -110,7 +106,7 @@ namespace LinqToDB.ServiceModel
 				if (_sqlProviderType == null)
 				{
 					var type = GetConfigurationInfo().LinqServiceInfo.SqlBuilderType;
-					_sqlProviderType = Type.GetType(type);
+					_sqlProviderType = Type.GetType(type)!;
 				}
 
 				return _sqlProviderType;
@@ -127,7 +123,7 @@ namespace LinqToDB.ServiceModel
 				if (_sqlOptimizerType == null)
 				{
 					var type = GetConfigurationInfo().LinqServiceInfo.SqlOptimizerType;
-					_sqlOptimizerType = Type.GetType(type);
+					_sqlOptimizerType = Type.GetType(type)!;
 				}
 
 				return _sqlOptimizerType;
@@ -136,7 +132,8 @@ namespace LinqToDB.ServiceModel
 			set => _sqlOptimizerType = value;
 		}
 
-		SqlProviderFlags IDataContext.SqlProviderFlags => GetConfigurationInfo().LinqServiceInfo.SqlProviderFlags;
+		SqlProviderFlags IDataContext.SqlProviderFlags      => GetConfigurationInfo().LinqServiceInfo.SqlProviderFlags;
+		TableOptions     IDataContext.SupportedTableOptions => GetConfigurationInfo().LinqServiceInfo.SupportedTableOptions;
 
 		Type IDataContext.DataReaderType => typeof(ServiceModelDataReader);
 

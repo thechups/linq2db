@@ -425,11 +425,12 @@ namespace LinqToDB.Mapping
 		/// <returns>Returns current fluent entity mapping builder.</returns>
 		public EntityMappingBuilder<TEntity> HasSkipValuesOnInsert(Expression<Func<TEntity, object?>> func, params object?[] values)
 		{
-			return SetAttribute(func,
-			                    true,
-			                    _ => new SkipValuesOnInsertAttribute(values) { Configuration = Configuration },
-			                    (_, a) => { },
-			                    a => a.Configuration);
+			return SetAttribute(
+				func,
+				true,
+				_ => new SkipValuesOnInsertAttribute(values) { Configuration = Configuration },
+				(_, a) => { },
+				a => a.Configuration);
 		}
 
 		/// <summary>
@@ -440,11 +441,12 @@ namespace LinqToDB.Mapping
 		/// <returns>Returns current fluent entity mapping builder.</returns>
 		public EntityMappingBuilder<TEntity> HasSkipValuesOnUpdate(Expression<Func<TEntity, object?>> func, params object?[] values)
 		{
-			return SetAttribute(func,
-			                    true,
-			                    _ => new SkipValuesOnUpdateAttribute(values) { Configuration = Configuration },
-			                    (_, a) => { },
-			                    a => a.Configuration);
+			return SetAttribute(
+				func,
+				true,
+				_ => new SkipValuesOnUpdateAttribute(values) { Configuration = Configuration },
+				(_, a) => { },
+				a => a.Configuration);
 		}
 
 		/// <summary>
@@ -507,6 +509,34 @@ namespace LinqToDB.Mapping
 		public EntityMappingBuilder<TEntity> HasServerName(string serverName)
 		{
 			return SetTable(a => a.Server = serverName);
+		}
+
+		/// <summary>
+		/// Sets linked server name.
+		/// See <see cref="TableExtensions.IsTemporary{T}(ITable{T},bool)"/> method for support information per provider.
+		/// </summary>
+		/// <param name="isTemporary">Linked server name.</param>
+		/// <returns>Returns current fluent entity mapping builder.</returns>
+		public EntityMappingBuilder<TEntity> HasIsTemporary(bool isTemporary = true)
+		{
+			return SetTable(a => a.IsTemporary = isTemporary);
+		}
+
+		/// <summary>
+		/// Sets Table options.
+		/// See <see cref="TableExtensions.TableOptions{T}(ITable{T},LinqToDB.TableOptions)"/> method for support information per provider.
+		/// </summary>
+		/// <param name="tableOptions">Table options.</param>
+		/// <returns>Returns current fluent entity mapping builder.</returns>
+		public EntityMappingBuilder<TEntity> HasTableOptions(TableOptions tableOptions)
+		{
+			return SetTable(a =>
+			{
+				if ((tableOptions & TableOptions.None) != 0)
+					a.TableOptions = tableOptions;
+				else
+					a.TableOptions |= tableOptions;
+			});
 		}
 
 		/// <summary>
@@ -632,6 +662,7 @@ namespace LinqToDB.Mapping
 					Schema                    = a.Schema,
 					Database                  = a.Database,
 					Server                    = a.Server,
+					TableOptions              = a.TableOptions,
 					IsColumnAttributeRequired = a.IsColumnAttributeRequired,
 				});
 		}
@@ -701,8 +732,8 @@ namespace LinqToDB.Mapping
 		{
 			var ex = func.Body;
 
-			if (ex is UnaryExpression)
-				ex = ((UnaryExpression)ex).Operand;
+			if (ex is UnaryExpression expression)
+				ex = expression.Operand;
 
 			if (existingGetter == null)
 				existingGetter = GetExisting;

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LinqToDB.DataProvider.Oracle
 {
@@ -11,8 +13,6 @@ namespace LinqToDB.DataProvider.Oracle
 	using LinqToDB.Common;
 	using Mapping;
 	using SqlProvider;
-	using System.Threading;
-	using System.Threading.Tasks;
 
 	public class OracleDataProvider : DynamicDataProviderBase<OracleProviderAdapter>
 	{
@@ -21,9 +21,9 @@ namespace LinqToDB.DataProvider.Oracle
 
 		public OracleDataProvider(string name, OracleVersion version)
 			: base(
-				  name,
-				  GetMappingSchema(name, OracleProviderAdapter.GetInstance(name).MappingSchema),
-				  OracleProviderAdapter.GetInstance(name))
+				name,
+				GetMappingSchema(name, OracleProviderAdapter.GetInstance(name).MappingSchema),
+				OracleProviderAdapter.GetInstance(name))
 		{
 			Version = version;
 
@@ -83,6 +83,14 @@ namespace LinqToDB.DataProvider.Oracle
 
 		public OracleVersion Version { get; }
 
+		public override TableOptions SupportedTableOptions =>
+			TableOptions.IsTemporary                |
+			TableOptions.IsGlobalTemporaryStructure |
+			TableOptions.IsLocalTemporaryData       |
+			TableOptions.IsTransactionTemporaryData |
+			TableOptions.CreateIfNotExists          |
+			TableOptions.DropIfExists;
+
 		public override ISqlBuilder CreateSqlBuilder(MappingSchema mappingSchema)
 		{
 			return Version switch
@@ -134,7 +142,7 @@ namespace LinqToDB.DataProvider.Oracle
 				if (parameters != null)
 					foreach (var parameter in parameters)
 					{
-						if (parameter.IsArray 
+						if (parameter.IsArray
 							&& parameter.Value is object[] value
 							&& value.Length != 0)
 						{

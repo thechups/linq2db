@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Xml;
 using System.Xml.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LinqToDB.DataProvider.SqlCe
 {
@@ -12,8 +15,6 @@ namespace LinqToDB.DataProvider.SqlCe
 	using Mapping;
 	using SchemaProvider;
 	using SqlProvider;
-	using System.Threading;
-	using System.Threading.Tasks;
 
 	public class SqlCeDataProvider : DynamicDataProviderBase<SqlCeProviderAdapter>
 	{
@@ -44,6 +45,8 @@ namespace LinqToDB.DataProvider.SqlCe
 		}
 
 		#region Overrides
+
+		public override TableOptions SupportedTableOptions => TableOptions.None;
 
 		public override ISqlBuilder CreateSqlBuilder(MappingSchema mappingSchema)
 		{

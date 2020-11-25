@@ -7,7 +7,7 @@
 		
 	<ItemGroup>
 		<PackageReference Include="Humanizer.Core" Version="2.8.26" />
-		<PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 
 		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
 	</ItemGroup>
@@ -21,8 +21,8 @@
 		<PackageReference Include="Npgsql" Version="4.0.11" />
 
 	</ItemGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' OR '$(TargetFramework)' == 'netcoreapp3.1' ">
-		<PackageReference Include="Npgsql" Version="4.1.5" />
+	<ItemGroup Condition="'$(TargetFramework)' != 'net472'">
+		<PackageReference Include="Npgsql" Version="5.0.0" />
 		<!--nuget doesn't have strong name, so we use local self-signed copy-->
 		<!--<PackageReference Include="dotMorten.Microsoft.SqlServer.Types" Version="1.2.0" />-->
 		<Reference Include="Microsoft.SqlServer.Types">
@@ -35,14 +35,13 @@
 		<Content Include="Models\bbb.txt" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' OR '$(TargetFramework)' == 'netcoreapp3.1' ">
+	<ItemGroup Condition="'$(TargetFramework)' != 'net472'">
 		<Compile Remove="WPF\ViewModel.cs" />
 		<Compile Remove="WPF\ViewModel.generated.cs" />
-	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' != 'net472'">
 		<None Remove="SqlServer.tt" />
 		<None Remove="SqlServerAzure.tt" />
+		
 		<Compile Remove="SqlServer.generated.cs" />
 		<Compile Remove="SqlServerAzure.generated.cs" />
 	</ItemGroup>
