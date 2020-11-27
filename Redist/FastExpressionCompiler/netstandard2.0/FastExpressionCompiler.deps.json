@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "FastExpressionCompiler/3.0.0-preview-04": {
+      "FastExpressionCompiler/3.0.0-preview-05": {
         "dependencies": {
           "NETStandard.Library": "2.0.3",
           "System.Dynamic.Runtime": "4.3.0",
@@ -256,7 +256,7 @@
     }
   },
   "libraries": {
-    "FastExpressionCompiler/3.0.0-preview-04": {
+    "FastExpressionCompiler/3.0.0-preview-05": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
