@@ -116,10 +116,10 @@ Legend:
 |Oracle 12c<br>[Oracle.ManagedDataAccess](https://www.nuget.org/packages/Oracle.ManagedDataAccess/) 19.10.0 (netfx)<br>[Oracle.ManagedDataAccess.Core](https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core/) 2.19.100 (core)|:x:|:x:|:heavy_check_mark:|:heavy_check_mark:|
 |Oracle 18c XE<br>Native Client|:x:|:heavy_minus_sign:|:heavy_minus_sign:|:heavy_minus_sign:|
 |Oracle 18c XE<br>[Oracle.ManagedDataAccess](https://www.nuget.org/packages/Oracle.ManagedDataAccess/) 19.10.0 (netfx)<br>[Oracle.ManagedDataAccess.Core](https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core/) 2.19.100 (core)|:x:|:x:|:x:|:x:|
-|Firebird 2.1<br>[FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/) 7.10.1|:x:|:x:|:x:|:x:|
-|Firebird 2.5<br>[FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/) 7.10.1|:x:|:x:|:heavy_check_mark:|:heavy_check_mark:|
-|Firebird 3.0<br>[FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/) 7.10.1|:x:|:x:|:heavy_check_mark:|:heavy_check_mark:|
-|Firebird 4.0<br>[FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/) 7.10.1|:x:|:x:|:heavy_check_mark:|:heavy_check_mark:|
+|Firebird 2.1<sup>[7](#notes)</sup><br>[FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/) 7.10.1|:x:|:x:|:x:|:x:|
+|Firebird 2.5<sup>[7](#notes)</sup><br>[FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/) 7.10.1|:x:|:x:|:heavy_check_mark:|:heavy_check_mark:|
+|Firebird 3.0<sup>[7](#notes)</sup><br>[FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/) 7.10.1|:x:|:x:|:heavy_check_mark:|:heavy_check_mark:|
+|Firebird 4.0<sup>[7](#notes)</sup><br>[FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/) 7.10.1|:x:|:x:|:heavy_check_mark:|:heavy_check_mark:|
 
 ###### Notes:
 1. `TestNoopProvider` is a fake test provider to perform tests without database dependencies
@@ -128,6 +128,7 @@ Legend:
 4. for SQL CE right now we don't run .net core tests
 5. Northwind FTS SQL Server tests not enabled yet, as we need SQL Server images with full-text search included
 6. Informix and DB2 use ubuntu 16.04 vm due to locale issues on 18.04/20.04 with IBM.Data.DB2 linux provider
+7. Both `Dialect1` and `Dialect3` tested
 
 ###### Provider names in context of tests
 | Name | Target Database | Extra Notes |

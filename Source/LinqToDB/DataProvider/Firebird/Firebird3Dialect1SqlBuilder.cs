@@ -3,7 +3,7 @@
 	using Mapping;
 	using SqlProvider;
 
-	// this class is needed for Linqservice to work
+	// this class is needed for LinqService to work
 	// dialect-specific code should be added to base builder using Dialect1 flag
 	public partial class Firebird3Dialect1SqlBuilder : Firebird3SqlBuilder
 	{

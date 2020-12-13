@@ -7,6 +7,8 @@
 	using System.Globalization;
 	using System.Text;
 
+	// We intentionally don't use separate merge builder for Firebird 3 (which adds merge operation condition support)
+	// User just shouldn't use unsupported functionality against Firebird 2.5
 	public partial class Firebird25SqlBuilder
 	{
 		// source subquery select list shouldn't contain parameters otherwise following error will be
