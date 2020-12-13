@@ -4,7 +4,10 @@ docker ps -a
 sleep 15
 
 # create Dialect1 database
-docker exec firebird sh -c "echo SET SQL DIALECT 1;CREATE DATABASE '/firebird/data/testdbd1.fdb' USER 'SYSDBA' PASSWORD 'masterkey' DEFAULT CHARACTER SET UTF8;QUIT; | /usr/local/firebird/bin/isql"
+#docker exec firebird sh -c "echo SET SQL DIALECT 1;CREATE DATABASE '/firebird/data/testdbd1.fdb' USER 'SYSDBA' PASSWORD 'masterkey' DEFAULT CHARACTER SET UTF8;QUIT; | /usr/local/firebird/bin/isql"
+cat <<EOF | docker exec -i firebird sh
+echo SET SQL DIALECT 1;CREATE DATABASE '/firebird/data/testdbd1.fdb' USER 'SYSDBA' PASSWORD 'masterkey' DEFAULT CHARACTER SET UTF8;QUIT; | /usr/local/firebird/bin/isql
+EOF
 
 docker exec firebird ls -a /firebird/data
 docker exec firebird ls -a /firebird/log
