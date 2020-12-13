@@ -462,7 +462,7 @@ namespace Tests.xUpdate
 		}
 
 		[Test]
-		public void TestMergeWithInterfaces6([MergeDataContextSource(TestProvName.AllInformix, ProviderName.Firebird)] string context)
+		public void TestMergeWithInterfaces6([MergeDataContextSource(TestProvName.AllInformix, TestProvName.AllFirebird25Minus)] string context)
 		{
 			using (var db = GetDataContext(context))
 			using (db.CreateLocalTable<ReviewIndex>())
@@ -496,7 +496,7 @@ namespace Tests.xUpdate
 		}
 
 		[Test]
-		public void TestMergeWithInterfaces8([MergeDataContextSource(TestProvName.AllInformix, ProviderName.Firebird)] string context)
+		public void TestMergeWithInterfaces8([MergeDataContextSource(TestProvName.AllInformix, TestProvName.AllFirebird25Minus)] string context)
 		{
 			using (var db = GetDataContext(context))
 			using (db.CreateLocalTable<ReviewIndex>())
@@ -517,7 +517,7 @@ namespace Tests.xUpdate
 		}
 
 		[Test]
-		public void TestMergeWithInterfaces9([MergeDataContextSource(TestProvName.AllInformix, ProviderName.Firebird)] string context)
+		public void TestMergeWithInterfaces9([MergeDataContextSource(TestProvName.AllInformix, TestProvName.AllFirebird25Minus)] string context)
 		{
 			using (var db = GetDataContext(context))
 			using (db.CreateLocalTable<ReviewIndex>())
@@ -551,7 +551,7 @@ namespace Tests.xUpdate
 		}
 
 		[Test]
-		public void TestMergeWithInterfaces11([MergeDataContextSource(TestProvName.AllInformix, ProviderName.Firebird, TestProvName.AllOracle)] string context)
+		public void TestMergeWithInterfaces11([MergeDataContextSource(TestProvName.AllInformix, TestProvName.AllFirebird25Minus, TestProvName.AllOracle)] string context)
 		{
 			using (var db = GetDataContext(context))
 			using (db.CreateLocalTable<ReviewIndex>())
@@ -632,7 +632,7 @@ namespace Tests.xUpdate
 		}
 
 		[Test]
-		public void TestMergeWithInterfaces16([MergeDataContextSource(ProviderName.Firebird, TestProvName.AllOracle, TestProvName.AllSybase)] string context)
+		public void TestMergeWithInterfaces16([MergeDataContextSource(TestProvName.AllFirebird25Minus, TestProvName.AllOracle, TestProvName.AllSybase)] string context)
 		{
 			using (var db = GetDataContext(context))
 			using (db.CreateLocalTable<ReviewIndex>())
@@ -647,7 +647,7 @@ namespace Tests.xUpdate
 		}
 
 		[Test]
-		public void TestMergeWithInterfaces17([MergeDataContextSource(ProviderName.Firebird, TestProvName.AllInformix, TestProvName.AllOracle, TestProvName.AllSybase)] string context)
+		public void TestMergeWithInterfaces17([MergeDataContextSource(TestProvName.AllFirebird25Minus, TestProvName.AllInformix, TestProvName.AllOracle, TestProvName.AllSybase)] string context)
 		{
 			using (var db = GetDataContext(context))
 			using (db.CreateLocalTable<ReviewIndex>())

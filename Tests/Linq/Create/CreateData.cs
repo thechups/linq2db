@@ -54,7 +54,8 @@ public class a_CreateData : TestBase
 		if (DataConnection.TraceSwitch.TraceInfo)
 			TestContext.WriteLine("Commands count: {0}", cmds.Length);
 
-		Exception? exception = null;
+		Exception? exception     = null;
+		string?    failedCommand = null;
 
 		using (var db = new TestDataConnection(configString))
 		{
@@ -104,7 +105,10 @@ public class a_CreateData : TestBase
 							TestContext.WriteLine("\nFAILED\n");
 
 							if (exception == null)
-								exception = ex;
+							{
+								exception     = ex;
+								failedCommand = command;
+							}
 						}
 
 					}
@@ -112,7 +116,7 @@ public class a_CreateData : TestBase
 			}
 
 			if (exception != null)
-				throw exception;
+				throw new Exception($"{exception.Message}:\n{failedCommand}", exception);
 
 			if (DataConnection.TraceSwitch.TraceInfo)
 				TestContext.WriteLine("\nBulkCopy LinqDataTypes\n");
@@ -243,8 +247,12 @@ public class a_CreateData : TestBase
 	{
 		switch (context)
 		{
-			case ProviderName.Firebird                         :
-			case TestProvName.Firebird3                        : RunScript(context,          "COMMIT;", "Firebird", FirebirdAction);       break;
+			case ProviderName.Firebird25                       :
+			case ProviderName.Firebird3                        :
+			case ProviderName.Firebird4                        : RunScript(context,          "COMMIT;", "Firebird", FirebirdAction);       break;
+			case ProviderName.Firebird25Dialect1               :
+			case ProviderName.Firebird3Dialect1                :
+			case ProviderName.Firebird4Dialect1                : RunScript(context,          "COMMIT;", "Firebird_Dialect1", FirebirdDialect1Action); break;
 			case ProviderName.PostgreSQL                       :
 			case ProviderName.PostgreSQL92                     :
 			case ProviderName.PostgreSQL93                     :
@@ -386,6 +394,24 @@ public class a_CreateData : TestBase
 				{
 					FIRSTNAME = "Jürgen",
 					LASTNAME  = "König",
+				});
+		}
+	}
+
+	void FirebirdDialect1Action(IDbConnection connection)
+	{
+		using (var conn = LinqToDB.DataProvider.Firebird.FirebirdTools.CreateDataConnection(connection))
+		{
+			conn.Execute(@"
+				UPDATE Person
+				SET
+					FirstName = @FIRSTNAME,
+					LastName  = @LASTNAME
+				WHERE PersonID = 4",
+				new
+				{
+					FIRSTNAME = "Jürgen",
+					LASTNAME = "König",
 				});
 		}
 	}

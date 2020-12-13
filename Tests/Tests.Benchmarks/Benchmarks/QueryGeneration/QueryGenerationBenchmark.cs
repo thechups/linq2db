@@ -30,7 +30,7 @@ namespace LinqToDB.Benchmarks.Benchmarks.QueryGeneration
 				return;
 
 			_dataProviders.Add(ProviderName.Access,                new AccessOleDbDataProvider());
-			_dataProviders.Add(ProviderName.Firebird,              new FirebirdDataProvider());
+			_dataProviders.Add(ProviderName.Firebird25,            new FirebirdDataProvider(FirebirdVersion.v2_5, FirebirdDialect.Dialect3));
 			_dataProviders.Add(ProviderName.SQLiteMS,              new SQLiteDataProvider(ProviderName.SQLiteMS));
 			_dataProviders.Add(ProviderName.SQLiteClassic,         new SQLiteDataProvider(ProviderName.SQLiteClassic));
 			//_dataProviders.Add(ProviderName.OracleManaged + ".11", new OracleDataProvider(ProviderName.OracleManaged, OracleVersion.v11));

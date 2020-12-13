@@ -918,7 +918,7 @@ namespace Tests.Linq
 					false,
 					ProviderName.DB2,
 					TestProvName.AllPostgreSQL,
-					TestProvName.AllFirebird,
+					TestProvName.AllFirebird3Minus,
 					TestProvName.AllSapHana)]
 				string context)
 		{
@@ -1516,7 +1516,7 @@ namespace Tests.Linq
 		public static T Wrap4<T>(T value) => value;
 
 		[Test]
-		public void SelectExpression1([DataSources(ProviderName.DB2, TestProvName.AllFirebird)] string context)
+		public void SelectExpression1([DataSources(ProviderName.DB2, TestProvName.AllFirebird3Minus)] string context)
 		{
 			using (var db    = GetDataContext(context))
 			using (var table = db.CreateLocalTable(SelectExpressionTable.Data))
@@ -1528,7 +1528,7 @@ namespace Tests.Linq
 		}
 
 		[Test]
-		public void SelectExpression2([DataSources(ProviderName.DB2, TestProvName.AllFirebird)] string context)
+		public void SelectExpression2([DataSources(ProviderName.DB2, TestProvName.AllFirebird3Minus)] string context)
 		{
 			using (var db = GetDataContext(context))
 			using (var table = db.CreateLocalTable(SelectExpressionTable.Data))

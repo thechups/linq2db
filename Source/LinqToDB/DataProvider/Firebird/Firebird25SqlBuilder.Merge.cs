@@ -7,7 +7,7 @@
 	using System.Globalization;
 	using System.Text;
 
-	public partial class FirebirdSqlBuilder
+	public partial class Firebird25SqlBuilder
 	{
 		// source subquery select list shouldn't contain parameters otherwise following error will be
 		// generated:

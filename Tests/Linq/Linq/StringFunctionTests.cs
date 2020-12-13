@@ -279,7 +279,7 @@ namespace Tests.Linq
 		}
 
 		[Test]
-		public void ContainsConstant4([DataSources(TestProvName.AllFirebird)] string context)
+		public void ContainsConstant4([DataSources(TestProvName.AllFirebird3Minus)] string context)
 		{
 			using (var db = GetDataContext(context))
 			{
@@ -592,7 +592,7 @@ namespace Tests.Linq
 		[ActiveIssue(Details = "Sql.CharIndex(string, string, int) have incorrect SQL logic for all providers (except HANA)")]
 		[Test]
 		public void IndexOf3([DataSources(
-			ProviderName.DB2, TestProvName.AllFirebird,
+			ProviderName.DB2, TestProvName.AllFirebird3Minus,
 			ProviderName.SqlCe, TestProvName.AllAccess, ProviderName.SQLiteMS)]
 			string context)
 		{

@@ -457,7 +457,7 @@ namespace Tests.Linq
 		}
 
 		[Test]
-		public void ToDefaultChar([DataSources(TestProvName.AllOracle, TestProvName.AllFirebird, TestProvName.AllPostgreSQL)] string context)
+		public void ToDefaultChar([DataSources(TestProvName.AllOracle, TestProvName.AllFirebird3Minus, TestProvName.AllPostgreSQL)] string context)
 		{
 			using (var db = GetDataContext(context))
 				AreEqual(
@@ -475,7 +475,7 @@ namespace Tests.Linq
 		}
 
 		[Test]
-		public void ToDefaultVarChar([DataSources(TestProvName.AllOracle, TestProvName.AllFirebird)]
+		public void ToDefaultVarChar([DataSources(TestProvName.AllOracle, TestProvName.AllFirebird3Minus)]
 			string context)
 		{
 			using (var db = GetDataContext(context))
@@ -494,7 +494,7 @@ namespace Tests.Linq
 		}
 
 		[Test]
-		public void ToDefaultNChar([DataSources(TestProvName.AllOracle, TestProvName.AllFirebird, TestProvName.AllPostgreSQL)] string context)
+		public void ToDefaultNChar([DataSources(TestProvName.AllOracle, TestProvName.AllFirebird3Minus, TestProvName.AllPostgreSQL)] string context)
 		{
 			using (var db = GetDataContext(context))
 				AreEqual(
@@ -512,7 +512,7 @@ namespace Tests.Linq
 		}
 
 		[Test]
-		public void ToDefaultNVarChar([DataSources(TestProvName.AllOracle, TestProvName.AllFirebird)] string context)
+		public void ToDefaultNVarChar([DataSources(TestProvName.AllOracle, TestProvName.AllFirebird3Minus)] string context)
 		{
 			using (var db = GetDataContext(context))
 				AreEqual(
