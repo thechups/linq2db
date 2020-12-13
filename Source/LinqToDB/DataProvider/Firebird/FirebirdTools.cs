@@ -103,13 +103,13 @@ namespace LinqToDB.DataProvider.Firebird
 						else
 							return _firebird25DataProvider.Value;
 
-					if (css.Name.Contains("3") || css.Name.Contains("3.0"))
+					if (css.Name.Contains("3"))
 						if (css.Name.Contains("Dialect1") || css.Name.Contains("Dialect.1"))
 							return _firebird3D1DataProvider.Value;
 						else
 							return _firebird3DataProvider.Value;
 
-					if (css.Name.Contains("4") || css.Name.Contains("4.0"))
+					if (css.Name.Contains("4"))
 						if (css.Name.Contains("Dialect1") || css.Name.Contains("Dialect.1"))
 							return _firebird4D1DataProvider.Value;
 						else

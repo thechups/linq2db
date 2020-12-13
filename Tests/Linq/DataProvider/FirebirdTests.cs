@@ -134,7 +134,7 @@ namespace Tests.DataProvider
 			}
 		}
 
-		static void TestSimple<T>(DataConnection conn, T expectedValue, DataType dataType, string? skip = null)
+		static void TestSimple<T>(DataConnection conn, T expectedValue, DataType dataType, string skip = "")
 			where T : struct
 		{
 			TestNumeric<T> (conn, expectedValue, dataType, skip);
@@ -148,7 +148,7 @@ namespace Tests.DataProvider
 			using (var conn = new DataConnection(context))
 			{
 				var dialect1 = ((FirebirdDataProvider)conn.DataProvider).Dialect == FirebirdDialect.Dialect1;
-				var skip     = dialect1 ? "bigint " : null;
+				var skip     = dialect1 ? "bigint " : "";
 
 				TestSimple<sbyte>  (conn, 1,    DataType.SByte, skip);
 				TestSimple<short>  (conn, 1,    DataType.Int16, skip);

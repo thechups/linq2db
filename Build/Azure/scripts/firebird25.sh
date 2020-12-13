@@ -4,6 +4,6 @@ docker ps -a
 sleep 5
 
 # create Dialect1 database
-docker exec firebird echo "SET SQL DIALECT 1;CREATE DATABASE '/firebird/data/testdb_d1.fdb' user 'SYSDBA' password 'masterkey';create or alter user SYSDBA password 'masterkey' using plugin Legacy_UserManager;create or alter user SYSDBA password 'masterkey' using plugin Srp;QUIT;" | /usr/local/firebird/bin/isql
+docker exec firebird echo "SET SQL DIALECT 1;CREATE DATABASE '/firebird/data/testdbd1.fdb' USER 'SYSDBA' PASSWORD 'masterkey' DEFAULT CHARACTER SET UTF8;QUIT;" | /usr/local/firebird/bin/isql
 
 docker logs firebird
